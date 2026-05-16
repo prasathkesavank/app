@@ -264,9 +264,9 @@ with st.form("contact_form"):
 
         # ---------------- EMAIL SETTINGS ----------------
 
-        sender_email = "YOUR_GMAIL@gmail.com"
+        sender_email = "Prasathkesavan93_bec26@mepcoeng.ac.in"
 
-        sender_password = "YOUR_GOOGLE_APP_PASSWORD"
+        sender_password = "9944204999"
 
         receiver_email = "c1nithinsanthoshk23@gmail.com"
 
