@@ -3,11 +3,14 @@
 import streamlit as st
 import pandas as pd
 from datetime import datetime
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 # ---------------- PAGE CONFIG ----------------
 
 st.set_page_config(
-    page_title="Kesavan Builders",
+    page_title="K7 Builders",
     page_icon="🏠",
     layout="wide"
 )
@@ -52,7 +55,7 @@ st.markdown("""
 
 # ---------------- HEADER ----------------
 
-st.title("🏠 Kesavan Builders")
+st.title("🏠 K7 Builders")
 st.subheader("Building Homes, Workplaces, Gardening & Landscaping")
 
 st.image(
@@ -123,6 +126,7 @@ st.header("💰 AI Construction Cost Estimator")
 col1, col2 = st.columns(2)
 
 with col1:
+
     building_type = st.selectbox(
         "Select Building Type",
         ["House", "Villa", "Apartment", "Office"]
@@ -143,6 +147,7 @@ with col1:
     )
 
 with col2:
+
     quality = st.selectbox(
         "Material Quality",
         ["Basic", "Premium", "Luxury"]
@@ -163,11 +168,13 @@ with col2:
 if st.button("Calculate Estimate"):
 
     if quality == "Basic":
-        rate = 1800
+        rate = 2400
+
     elif quality == "Premium":
-        rate = 2800
+        rate = 2700
+
     else:
-        rate = 4500
+        rate = 3500
 
     construction_cost = area * floors * rate
 
@@ -217,12 +224,14 @@ st.divider()
 
 # ---------------- CONTACT FORM ----------------
 
-st.header("📞 Contact Kesavan Builders")
+st.header("📞 Contact K7 Builders")
 
 with st.form("contact_form"):
 
     name = st.text_input("Your Name")
+
     phone = st.text_input("Phone Number")
+
     location = st.text_input("Project Location")
 
     requirement = st.text_area(
@@ -232,6 +241,8 @@ with st.form("contact_form"):
     submit = st.form_submit_button("Submit")
 
     if submit:
+
+        # ---------------- SAVE DATA ----------------
 
         data = {
             "Name": [name],
@@ -251,7 +262,73 @@ with st.form("contact_form"):
         except:
             df.to_csv("leads.csv", index=False)
 
-        st.success("✅ Request Submitted Successfully!")
+        # ---------------- EMAIL SETTINGS ----------------
+
+        sender_email = "YOUR_GMAIL@gmail.com"
+
+        sender_password = "YOUR_GOOGLE_APP_PASSWORD"
+
+        receiver_email = "c1nithinsanthoshk23@gmail.com"
+
+        subject = "New Customer Request - K7 Builders"
+
+        body = f"""
+New customer enquiry received.
+
+Name: {name}
+
+Phone: {phone}
+
+Location: {location}
+
+Requirement:
+{requirement}
+
+Submitted At:
+{datetime.now()}
+"""
+
+        # ---------------- SEND EMAIL ----------------
+
+        try:
+
+            msg = MIMEMultipart()
+
+            msg["From"] = sender_email
+
+            msg["To"] = receiver_email
+
+            msg["Subject"] = subject
+
+            msg.attach(MIMEText(body, "plain"))
+
+            server = smtplib.SMTP(
+                "smtp.gmail.com",
+                587
+            )
+
+            server.starttls()
+
+            server.login(
+                sender_email,
+                sender_password
+            )
+
+            server.sendmail(
+                sender_email,
+                receiver_email,
+                msg.as_string()
+            )
+
+            server.quit()
+
+            st.success(
+                "✅ Request Submitted Successfully!"
+            )
+
+        except Exception as e:
+
+            st.error(f"Email Error: {e}")
 
 st.divider()
 
@@ -268,8 +345,13 @@ images = [
 ]
 
 for i in range(3):
+
     with gallery[i]:
-        st.image(images[i], use_container_width=True)
+
+        st.image(
+            images[i],
+            use_container_width=True
+        )
 
 st.divider()
 
@@ -278,13 +360,15 @@ st.divider()
 st.markdown("""
 <center>
 
-### Kesavan Builders
+### K7 Builders
 
-Building Dreams Into Reality 🏠
+Building Your Dreams 🏠
 
-📍 Chennai, Tamil Nadu  
-📞 +91 XXXXX XXXXX  
-📧 kesavanbuilders@gmail.com
+📍 Madurai, Tamil Nadu
+
+📞 +91 9042460030, 9944204999
+
+📧 c1nithinsanthoshk23@gmail.com
 
 </center>
 """, unsafe_allow_html=True)
